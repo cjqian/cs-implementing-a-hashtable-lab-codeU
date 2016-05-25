@@ -35,7 +35,7 @@ public class ProfileMapPut {
 			}
 		};
 		int startN = 8000;
-		int endMillis = 1000;
+		int endMillis = 2000;
 		runProfiler("HashMap put", timeable, startN, endMillis);
 	}
 	

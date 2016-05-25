@@ -22,14 +22,14 @@ public class MyHashMap<K, V> extends MyBetterMap<K, V> implements Map<K, V> {
 
 	@Override
 	public V put(K key, V value) {
-		V oldValue = super.put(key, value);
-		
-		//System.out.println("Put " + key + " in " + map + " size now " + map.size());
-		
 		// check if the number of elements per map exceeds the threshold
-		if (size() > maps.size() * FACTOR) {
+		if (size() + 1 > maps.size() * FACTOR) {
 			rehash();
 		}
+        
+        //this should speed up a little since we don't need to add twice
+		V oldValue = super.put(key, value);
+
 		return oldValue;
 	}
 
@@ -40,8 +40,19 @@ public class MyHashMap<K, V> extends MyBetterMap<K, V> implements Map<K, V> {
 	 * 
 	 */
 	protected void rehash() {
-        // TODO: fill this in.
-        throw new UnsupportedOperationException();
+        //collect the entries in the table
+        List<MyLinearMap<K, V>> prevMaps = maps; 
+
+        //resize the table
+        int k = maps.size() * 2;
+        makeMaps(k);
+
+        //put the entries back in
+        for (MyLinearMap<K, V> map : prevMaps){
+            for (Map.Entry<K,V> entry : map.getEntries()){
+                put(entry.getKey(), entry.getValue());
+            }
+        }
 	}
 
 	/**
